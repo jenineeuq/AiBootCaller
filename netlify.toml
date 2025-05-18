@@ -1,0 +1,48 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# For Next.js 13+ with app directory
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Handle Next.js rewrites and redirects
+[[redirects]]
+  from = "/*"
+  to = "/_ipx"
+  status = 200
+  force = true
+  conditions = {Path = ["/_ipx/**"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/404"
+  status = 404
+
+[functions]
+  # Increase the timeout for functions that might take longer
+  node_bundler = "esbuild"
+
+# Cache control for static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_next/image/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
